@@ -5,8 +5,7 @@ const jwt = require('jsonwebtoken');
 //Register
 async function register(req, res) {
   try {
-    const { first_name, last_name, email, password } = req.body;
-
+    const { username, email, password } = req.body;
     // Check if the email already exists
     const existingUser = await pool.query(
       "SELECT * FROM users WHERE email = $1",
@@ -21,8 +20,8 @@ async function register(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await pool.query(
-      "INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING *",
-      [first_name, last_name, email, hashedPassword]
+      "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *",
+      [username, email, hashedPassword]
     );
 
     res.status(201).json(result.rows[0]);
@@ -42,17 +41,21 @@ async function login(req, res) {
     );
 
     const user = result.rows[0];
+
     if (!user) {
-      return res.status(400).json({ message: "Invalid Credentials" });
+      return res.status(400).json({ message: "Email not found!" });
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
+
     if (!isPasswordMatch) {
-      return res.status(400).json({ message: "Invalid Credentials" });
+      return res.status(400).json({ message: "Invalid Password" });
     }
+
     const token = jwt.sign({ user: user }, process.env.SECRET_KEY, {
-      expiresIn: "1h"
+      expiresIn: "10h"
     });
+
     res.json({ token });
   } catch (error) {
     console.error(error);
@@ -61,16 +64,16 @@ async function login(req, res) {
 }
 
 //auth to check if the token is expired or not 
-async function auth(req, res) {
-  try {
-    const user_id = req.data.user.user_id;
-    if (user_id) {
-      res.json("ok");
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(401).send("Unauthorized");
-  }
-}
+// async function auth(req, res) {
+//   try {
+//     const user_id = req.data.user.user_id;
+//     if (user_id) {
+//       res.json("ok");
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(401).send("Unauthorized");
+//   }
+// }
 
-module.exports = { register, login, auth };
+module.exports = { register, login };
