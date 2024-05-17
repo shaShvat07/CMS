@@ -6,7 +6,9 @@ exports.createCollection = async (req, res) => {
     try {
         const user_id = req.data.user.user_id;
         const { collection_name } = req.body;
-
+        if (!collection_name || typeof collection_name !== 'string' || collection_name.length === 0 || collection_name.length > 100) {
+            return res.status(400).json({ message: "Title must be a non-empty string with maximum 100 characters" });
+        }
         // Generate the current timestamp in milliseconds
         const timestamp = Date.now();
         const dateObject = new Date(timestamp);
@@ -63,6 +65,10 @@ exports.updateCollection = async (req, res) => {
     try {
         const user_id = req.data.user.user_id;
         const { collection_name } = req.body;
+        if (!collection_name || typeof collection_name !== 'string' || collection_name.length === 0 || collection_name.length > 100) {
+            return res.status(400).json({ message: "Title must be a non-empty string with maximum 100 characters" });
+        }
+        
         const collection_id = req.params.collection_id;
 
         // Generate the current timestamp in milliseconds
