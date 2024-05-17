@@ -42,10 +42,14 @@ exports.getAllCollection = async (req, res) => {
 //Get one collection
 exports.getCollection = async (req, res) => {
     try {
+        const user_id = req.data.user.user_id;
         const collection_id = req.params.collection_id;
         const collection = await collectionService.getCollection(collection_id);
         if (!collection || collection === null || collection == undefined) {
             return res.status(404).json('No Collection Data found!');
+        }
+        if (collection.user_id !== user_id) {
+            return res.json("Unauthorized !");
         }
         return res.status(201).json(collection);
     } catch (error) {
@@ -70,7 +74,9 @@ exports.updateCollection = async (req, res) => {
         if (!collection) {
             return res.status(404).json("Can't update!");
         }
-
+        if (collection.user_id !== user_id) {
+            return res.json("Unauthorized !");
+        }
         return res.status(201).json(collection);
     } catch (error) {
         console.log('Server Error: ', error);
@@ -84,15 +90,22 @@ exports.deleteCollection = async (req, res) => {
         const user_id = req.data.user.user_id;
         const collection_id = req.params.collection_id;
         const collection = await collectionService.getCollection(collection_id);
-        if (collection) {
-            const result = await collectionService.deleteCollection(collection_id);
-            if (result) {
-                await userService.removeCollectionId(user_id, collection_id);
-                return res.status(201).json(result);
-            }
-            return res.status(404).json("Oops Unable to delete!");
+        if (!collection) {
+            return res.status(404).json(`No collection with id = ${collection_id} exists to delete!`);
         }
-        return res.status(404).json(`No collection with id = ${collection_id} exists to delete!`);
+        if (collection.user_id !== user_id) {
+            return res.json("Unauthorized !");
+        }
+
+        const result = await collectionService.deleteCollection(collection_id);
+        if (!result) {
+            return res.status(400).json("Server Error!!");
+        }
+        if (result) {
+            await userService.removeCollectionId(user_id, collection_id);
+            return res.status(201).json(result);
+        }
+        return res.status(404).json("Oops Unable to delete!");
     } catch (error) {
         console.log('Server Error: ', error);
         return res.status(400).json(error);
