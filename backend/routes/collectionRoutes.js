@@ -9,5 +9,4 @@ router.get("/collection/:collection_id", verifyToken, collectionController.getCo
 router.patch("/collection/:collection_id", verifyToken, collectionController.updateCollection);
 router.delete("/collection/:collection_id", verifyToken, collectionController.deleteCollection);
 
-
 module.exports = { collectionRoutes: router };

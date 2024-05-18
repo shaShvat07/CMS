@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const { authRoutes } = require('./routes/authRoutes');
 const { collectionRoutes } = require('./routes/collectionRoutes');
+const { propRoutes } = require('./routes/propRoutes');
 
 dotenv.config();
 
@@ -18,3 +19,4 @@ app.listen(PORT, () => {
 
 app.use('/', authRoutes);
 app.use('/', collectionRoutes);
+app.use('/', propRoutes);
