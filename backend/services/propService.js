@@ -51,7 +51,7 @@ exports.addPropertyToCollection = async (collection_id, newProperty) => {
                 sqlType = 'VARCHAR(255)';
                 break;
             case 'Number':
-                sqlType = 'INTEGER';
+                sqlType = 'BIGINT';
                 break;
             case 'Date':
                 sqlType = 'TIMESTAMPTZ';
