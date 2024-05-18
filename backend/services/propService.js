@@ -32,13 +32,13 @@ exports.addPropertyToCollection = async (collection_id, newProperty) => {
 
         // Ensure the table exists or create it
         const createTableQuery = `
-                CREATE TABLE IF NOT EXISTS ${tableName} (
-                    id SERIAL PRIMARY KEY
-                );
-            `;
+            CREATE TABLE IF NOT EXISTS ${tableName} (
+                id SERIAL PRIMARY KEY
+            );
+        `;
         await client.query(createTableQuery);
 
-        // Determine SQL type and constraints
+        // Determine SQL type
         let sqlType;
         switch (newProperty.type) {
             case 'Text':
@@ -66,12 +66,14 @@ exports.addPropertyToCollection = async (collection_id, newProperty) => {
                 };
         }
 
-        const notNullConstraint = newProperty.unique ? 'NOT NULL' : '';
+        // Quote the column name to prevent SQL injection and handle reserved keywords
+        const quotedColumnName = `"${newProperty.name}"`;
 
-        // Add new column to user-specific table
+        // Add new column to user-specific table with or without NOT NULL constraint
+        const notNullConstraint = newProperty.unique ? 'UNIQUE' : '';
         const addColumnQuery = `
             ALTER TABLE ${tableName}
-            ADD COLUMN ${newProperty.name} ${sqlType} ${notNullConstraint};
+            ADD COLUMN ${quotedColumnName} ${sqlType} ${notNullConstraint};
         `;
         await client.query(addColumnQuery);
 
@@ -94,9 +96,63 @@ exports.addPropertyToCollection = async (collection_id, newProperty) => {
 };
 
 //Delete property from a collection
-exports.updateCollectionProperties = async (collection_id, properties) => {
-    const query = 'UPDATE collection_data SET properties = $1, updated_at = CURRENT_TIMESTAMP WHERE collection_id = $2 RETURNING *';
-    const values = [properties, collection_id];
-    const { rows } = await pool.query(query, values);
-    return rows[0];
+// Delete a property from a collection
+exports.deletePropertyFromCollection = async (collection_id, property_id) => {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+
+        // Get the current properties of the collection
+        const { rows: collectionRows } = await client.query('SELECT * FROM collection_data WHERE collection_id = $1', [collection_id]);
+        if (collectionRows.length === 0) {
+            return {
+                status: 404,
+                message: 'Collection not found',
+            };
+        }
+        const currentProperties = collectionRows[0].properties || [];
+
+        // Find the index of the property to delete
+        const propertyIndex = currentProperties.findIndex(property => property.id === property_id);
+        if (propertyIndex === -1) {
+            return {
+                status: 404,
+                message: 'Property not found in collection',
+            };
+        }
+
+        // Remove the property from the array
+        const deletedProperty = currentProperties.splice(propertyIndex, 1)[0];
+
+        // Update the collection with the new properties array
+        const updateQuery = 'UPDATE collection_data SET properties = $1, updated_at = CURRENT_TIMESTAMP WHERE collection_id = $2 RETURNING *';
+        const updateValues = [currentProperties, collection_id];
+        const { rows: updatedRows } = await client.query(updateQuery, updateValues);
+
+        // Remove the corresponding column from the user-specific table
+        const collection = collectionRows[0];
+        const sanitizedUserId = collection.user_id.replace(/-/g, '_');
+        const tableName = `table_${sanitizedUserId}_${collection.collection_id}`;
+        const quotedColumnName = `"${deletedProperty.name}"`;
+        const dropColumnQuery = `ALTER TABLE ${tableName} DROP COLUMN ${quotedColumnName};`;
+        await client.query(dropColumnQuery);
+
+        await client.query('COMMIT');
+
+        return {
+            status: 200,
+            message: 'Property deleted successfully',
+            collection: updatedRows[0],
+        };
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Error deleting property from collection:', error);
+        return {
+            status: 500,
+            message: 'Internal server error',
+            error: error.message,
+        };
+    } finally {
+        client.release();
+    }
 };

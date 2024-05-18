@@ -26,7 +26,7 @@ exports.addProp = async (req, res) => {
             return res.status(400).json({ message: "Type must be one of 'Text', 'Email', 'Password', 'Number', 'Date', or 'Boolean'" });
         }
 
-        if (!unique || typeof unique !== 'boolean') {
+        if (unique == null || typeof unique !== 'boolean') {
             return res.status(400).json({ message: "Unique must be a non-empty boolean" });
         }
 
@@ -68,7 +68,10 @@ exports.getAllProp = async (req, res) => {
         }
 
         const existingProperties = collection.properties;
+        if(!existingProperties){
 
+            return res.status(201).json("No props exist!");
+        }
         return res.status(201).json(existingProperties);
     } catch (error) {
         console.log(error);
@@ -91,20 +94,20 @@ exports.deleteProp = async (req, res) => {
             return res.status(401).json("Unauthorized !");
         }
 
-        const existingProperties = collection.properties;
+        // const existingProperties = collection.properties;
 
-        // Find the index of the property with the given id
-        const propIndex = existingProperties.findIndex(prop => prop.id === prop_id);
+        // // Find the index of the property with the given id
+        // const propIndex = existingProperties.findIndex(prop => prop.id === prop_id);
 
-        if (propIndex === -1) {
-            return res.status(404).json('Property not found!');
-        }
+        // if (propIndex === -1) {
+        //     return res.status(404).json('Property not found!');
+        // }
 
-        // Remove the property from the array
-        existingProperties.splice(propIndex, 1);
+        // // Remove the property from the array
+        // existingProperties.splice(propIndex, 1);
 
         // Update the collection with the new properties array
-        const data = await propService.updateCollectionProperties(collection_id, existingProperties);
+        const data = await propService.deletePropertyFromCollection(collection_id, prop_id);
         if(!data){
             return res.status(400).json("Oops Error in deleting the props!");
         }

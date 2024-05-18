@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const { authRoutes } = require('./routes/authRoutes');
 const { collectionRoutes } = require('./routes/collectionRoutes');
 const { propRoutes } = require('./routes/propRoutes');
+const { entryRoutes } = require('./routes/entryRoutes');
 
 dotenv.config();
 
@@ -20,3 +21,4 @@ app.listen(PORT, () => {
 app.use('/', authRoutes);
 app.use('/', collectionRoutes);
 app.use('/', propRoutes);
+app.use('/', entryRoutes);
