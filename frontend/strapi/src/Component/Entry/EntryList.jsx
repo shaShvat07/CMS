@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { DeleteEntryModal } from '..';
 
 const EntryList = ({ entries, collection }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [EntryId, setEntryId] = useState('');
   return (
     <div className="container mx-auto p-4 overflow-x-auto text-white mr-48">
+      <DeleteEntryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        collectionId={collection.collection_id}
+        entryId={EntryId}
+      />
       <table className="min-w-full bg-gray-800 overflow-hidden">
         <thead>
           <tr>
@@ -25,8 +34,15 @@ const EntryList = ({ entries, collection }) => {
                 </td>
               ))}
               <td className="border px-4 py-2 flex justify-around">
-                <img src="/edit.svg" />
-                <img src="/delete.svg" />
+                <img src="/edit.svg"></img>
+                <img
+                  src="/delete.svg"
+                  className='hover:cursor-pointer'
+                  onClick={() => {
+                    setIsModalOpen(true);
+                    setEntryId(entry.id);
+                  }}>
+                </img>
               </td>
             </tr>
           ))}

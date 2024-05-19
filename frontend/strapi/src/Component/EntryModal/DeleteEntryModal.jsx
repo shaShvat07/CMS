@@ -1,16 +1,16 @@
 // CollectionModal.js
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-const DeletePropModal = ({ isOpen, onClose, collectionId, entryId }) => {
+const DeleteEntryModal = ({ isOpen, onClose, collectionId, entryId }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
         if (token) {
             try {
                 const response = await axios.delete(
-                    `http://localhost:3000/collection/${collectionId}/prop/${entryId}`,
+                    `http://localhost:3000/${collectionId}/entry/${entryId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -18,7 +18,7 @@ const DeletePropModal = ({ isOpen, onClose, collectionId, entryId }) => {
                         },
                     }
                 );
-                toast.success("Property successfully deleted!");
+                toast.success("Entry successfully deleted!");
                 onClose();
             } catch (error) {
                 toast.error(error.response?.data);
@@ -35,8 +35,7 @@ const DeletePropModal = ({ isOpen, onClose, collectionId, entryId }) => {
                 <h2 className="text-2xl font-bold mb-4">Warning!!!</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <div>Are you sure you want to delete this property?</div>
-                        <div>You will lose you existing data stored in this prop!</div>
+                        <div>Are you sure you want to delete this entry?</div>
                     </div>
                     <div className="flex justify-end">
                         <button
@@ -50,7 +49,7 @@ const DeletePropModal = ({ isOpen, onClose, collectionId, entryId }) => {
                             type="submit"
                             className="px-4 py-2 bg-red-600 text-white rounded-lg"
                         >
-                            Delete Property
+                            Delete Entry
                         </button>
                     </div>
                 </form>
@@ -59,4 +58,4 @@ const DeletePropModal = ({ isOpen, onClose, collectionId, entryId }) => {
     );
 };
 
-export default DeletePropModal;
+export default DeleteEntryModal;
