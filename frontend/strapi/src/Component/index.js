@@ -13,4 +13,4 @@ export { default as CollectionModal } from './CollectionModal/CollectionModal';
 export { default as UpdateCollectionModal } from './CollectionModal/UpdateCollectionModal';
 export { default as DeleteCollectionModal } from './CollectionModal/DeleteCollectionModal';
 export { default as PropModal } from './PropModal/PropModal';
-
+export { default as DeletePropModal } from './PropModal/DeletePropModal';

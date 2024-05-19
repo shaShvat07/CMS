@@ -1,14 +1,15 @@
 // Collection.js
 import React, { useState } from 'react';
 import { convertToIST } from '../utils';
-import { UpdateCollectionModal, DeleteCollectionModal, PropModal } from '..';
+import { UpdateCollectionModal, DeleteCollectionModal, PropModal, DeletePropModal } from '..';
 
 const Collection = ({ collection, index }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isPropModalOpen, setIsPropModalOpen] = useState(false);
-
+  const [isDeletePropModalOpen, setIsDeletePropModalOpen] = useState(false);
+  const [PropId, setPropId] = useState('');
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
@@ -61,6 +62,12 @@ const Collection = ({ collection, index }) => {
             onClose={() => setIsPropModalOpen(false)}
             collectionId={collection.collection_id}
           />
+          <DeletePropModal
+            isOpen={isDeletePropModalOpen}
+            onClose={() => setIsDeletePropModalOpen(false)}
+            collectionId={collection.collection_id}
+            propId={PropId}
+          />
           <div className="mt-3 border"></div>
           <div className='text-white text-center text-2xl mt-3'> Property Table </div>
           <table className="min-w-full mt-4 bg-gray-800 rounded-lg">
@@ -78,7 +85,15 @@ const Collection = ({ collection, index }) => {
                   <td className="px-4 py-2 text-center">{prop.name}</td>
                   <td className="px-4 py-2 text-center">{prop.type}</td>
                   <td className="px-4 py-2 text-center">{prop.unique ? 'Yes' : 'No'}</td>
-                  <td className="px-4 py-2 text-center">Delete</td>
+                  <td className="px-4 py-2 text-center">
+                    <button className="text-white bg-red-600 p-2 rounded-lg"
+                      onClick={() => {
+                        setIsDeletePropModalOpen(true);
+                        setPropId(prop.id);
+                      }}>
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
