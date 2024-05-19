@@ -27,10 +27,12 @@ const Home = () => {
     return (
         <>
             <div className="text-primary-500 text-center text-2xl">Content Builder</div>
-            <div>
-                <button className='text-white bg-primary-600 p-2'>Add a Collection </button>
+            {/* <div className='mt-3 border'></div> */}
+            <div className='w-full flex justify-center mt-3'>
+                <button className='text-white bg-primary-600 p-2 rounded-lg'>+ Add a Collection </button>
             </div>
             <div className='mt-3 border'></div>
+            <div className='mt-3 text-white text-2xl text-center'>Your Collections list</div>
             <CollectionsList collections={collections} />
         </>
     )

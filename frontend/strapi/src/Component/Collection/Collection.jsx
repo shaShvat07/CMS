@@ -10,26 +10,26 @@ const Collection = ({ collection, index }) => {
   };
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow mb-4">
+    <div className="p-4 bg-gray-700 text-white rounded-lg shadow mb-4">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-bold">
+          <h2 className="text-xl font-bold text-primary-300">
             {index + 1}. {collection.collection_name}
           </h2>
           <p>Created At: {convertToIST(collection.created_at)}</p>
           <p>Updated At: {convertToIST(collection.updated_at)}</p>
         </div>
         <button
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+          className="px-4 py-2 bg-primary-600 text-white rounded-lg"
           onClick={toggleExpand}
         >
           {isExpanded ? 'Collapse' : 'Expand'}
         </button>
       </div>
       {isExpanded && (
-        <table className="min-w-full mt-4 bg-gray-100 rounded-lg">
+        <table className="min-w-full mt-4 bg-gray-800 rounded-lg">
           <thead>
-            <tr>
+            <tr className='text-xl text-primary-300'>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Type</th>
               <th className="px-4 py-2">Unique</th>
