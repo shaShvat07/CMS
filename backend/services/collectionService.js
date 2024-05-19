@@ -63,9 +63,50 @@ exports.updateCollection = async (user_id, collection_id, collection_name, updat
 
 // Delete the collection
 exports.deleteCollection = async (collection_id) => {
-    const query = 'DELETE FROM collection_data WHERE collection_id = $1 RETURNING *';
-    const values = [collection_id];
-    const { rows } = await pool.query(query, values);
-    return rows[0];
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+
+        // Get the collection data for user and collection name
+        const collectionQuery = 'SELECT * FROM collection_data WHERE collection_id = $1';
+        const { rows } = await client.query(collectionQuery, [collection_id]);
+
+        if (rows.length === 0) {
+            await client.query('ROLLBACK');
+            return {
+                status: 404,
+                message: 'Collection not found',
+            };
+        }
+
+        const collection = rows[0];
+        const sanitizedUserId = collection.user_id.replace(/-/g, '_');
+        const tableName = `table_${sanitizedUserId}_${collection.collection_id}`;
+
+        // Drop the table associated with the collection
+        const dropTableQuery = `DROP TABLE IF EXISTS ${tableName};`;
+        await client.query(dropTableQuery);
+
+        // Delete the collection from collection_data
+        const deleteCollectionQuery = 'DELETE FROM collection_data WHERE collection_id = $1 RETURNING *';
+        const deleteCollectionValues = [collection_id];
+        const { rows: deletedRows } = await client.query(deleteCollectionQuery, deleteCollectionValues);
+
+        await client.query('COMMIT');
+        return {
+            status: 200,
+            message: 'Collection and associated table deleted successfully',
+            collection: deletedRows[0],
+        };
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Error deleting collection:', error);
+        return {
+            status: 400,
+            message: error,
+        };
+    } finally {
+        client.release();
+    }
 };
 
