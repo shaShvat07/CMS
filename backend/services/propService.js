@@ -95,7 +95,6 @@ exports.addPropertyToCollection = async (collection_id, newProperty) => {
     }
 };
 
-//Delete property from a collection
 // Delete a property from a collection
 exports.deletePropertyFromCollection = async (collection_id, property_id) => {
     const client = await pool.connect();

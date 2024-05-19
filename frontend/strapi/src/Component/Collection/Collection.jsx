@@ -1,12 +1,14 @@
 // Collection.js
 import React, { useState } from 'react';
 import { convertToIST } from '../utils';
-import { UpdateCollectionModal, DeleteCollectionModal } from '..';
+import { UpdateCollectionModal, DeleteCollectionModal, PropModal } from '..';
 
 const Collection = ({ collection, index }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isPropModalOpen, setIsPropModalOpen] = useState(false);
+
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
@@ -39,7 +41,10 @@ const Collection = ({ collection, index }) => {
               onClick={() => setIsDeleteModalOpen(true)}>
               Delete Collection
             </button>
-            <button className="text-white bg-primary-600 p-2 rounded-lg">Add a Property</button>
+            <button className="text-white bg-primary-600 p-2 rounded-lg"
+              onClick={() => setIsPropModalOpen(true)}>
+              Add a Property
+            </button>
           </div>
           <UpdateCollectionModal
             isOpen={isModalOpen}
@@ -51,6 +56,11 @@ const Collection = ({ collection, index }) => {
             onClose={() => setIsDeleteModalOpen(false)}
             collectionId={collection.collection_id}
           />
+          <PropModal
+            isOpen={isPropModalOpen}
+            onClose={() => setIsPropModalOpen(false)}
+            collectionId={collection.collection_id}
+          />
           <div className="mt-3 border"></div>
           <div className='text-white text-center text-2xl mt-3'> Property Table </div>
           <table className="min-w-full mt-4 bg-gray-800 rounded-lg">
@@ -59,6 +69,7 @@ const Collection = ({ collection, index }) => {
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2">Type</th>
                 <th className="px-4 py-2">Unique</th>
+                <th className="px-4 py-2">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -67,6 +78,7 @@ const Collection = ({ collection, index }) => {
                   <td className="px-4 py-2 text-center">{prop.name}</td>
                   <td className="px-4 py-2 text-center">{prop.type}</td>
                   <td className="px-4 py-2 text-center">{prop.unique ? 'Yes' : 'No'}</td>
+                  <td className="px-4 py-2 text-center">Delete</td>
                 </tr>
               ))}
             </tbody>
