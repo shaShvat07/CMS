@@ -24,7 +24,7 @@ const Home = () => {
                     console.error('Error fetching collections:', error);
                 });
         }
-    }, [token]);
+    }, [token, collections]);
 
     const handleCollectionAdded = (newCollection) => {
         setCollections([...collections, newCollection]);

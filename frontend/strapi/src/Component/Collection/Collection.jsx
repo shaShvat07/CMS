@@ -1,10 +1,12 @@
 // Collection.js
 import React, { useState } from 'react';
 import { convertToIST } from '../utils';
+import { UpdateCollectionModal, DeleteCollectionModal } from '..';
 
 const Collection = ({ collection, index }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
@@ -27,24 +29,49 @@ const Collection = ({ collection, index }) => {
         </button>
       </div>
       {isExpanded && (
-        <table className="min-w-full mt-4 bg-gray-800 rounded-lg">
-          <thead>
-            <tr className='text-xl text-primary-300'>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Type</th>
-              <th className="px-4 py-2">Unique</th>
-            </tr>
-          </thead>
-          <tbody>
-            {collection && collection.properties && collection.properties.map((prop, propIndex) => (
-              <tr key={propIndex} className="border-b">
-                <td className="px-4 py-2 text-center">{prop.name}</td>
-                <td className="px-4 py-2 text-center">{prop.type}</td>
-                <td className="px-4 py-2 text-center">{prop.unique ? 'Yes' : 'No'}</td>
+        <>
+          <div className='flex w-full justify-around mt-3'>
+            <button className="text-white bg-primary-600 p-2 rounded-lg"
+              onClick={() => setIsModalOpen(true)}>
+              Edit Collection Name
+            </button>
+            <button className="text-white bg-red-600 p-2 rounded-lg"
+              onClick={() => setIsDeleteModalOpen(true)}>
+              Delete Collection
+            </button>
+            <button className="text-white bg-primary-600 p-2 rounded-lg">Add a Property</button>
+          </div>
+          <UpdateCollectionModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            collectionId={collection.collection_id}
+          />
+          <DeleteCollectionModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
+            collectionId={collection.collection_id}
+          />
+          <div className="mt-3 border"></div>
+          <div className='text-white text-center text-2xl mt-3'> Property Table </div>
+          <table className="min-w-full mt-4 bg-gray-800 rounded-lg">
+            <thead>
+              <tr className='text-xl text-primary-300'>
+                <th className="px-4 py-2">Name</th>
+                <th className="px-4 py-2">Type</th>
+                <th className="px-4 py-2">Unique</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {collection && collection.properties && collection.properties.map((prop, propIndex) => (
+                <tr key={propIndex} className="border-b">
+                  <td className="px-4 py-2 text-center">{prop.name}</td>
+                  <td className="px-4 py-2 text-center">{prop.type}</td>
+                  <td className="px-4 py-2 text-center">{prop.unique ? 'Yes' : 'No'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
       )}
     </div>
   );

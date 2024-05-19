@@ -10,4 +10,5 @@ export { default as Sidebar } from './Sidebar/Sidebar';
 export { default as Collection } from './Collection/Collection';
 export { default as CollectionsList } from './Collection/CollectionsList';
 export { default as CollectionModal } from './CollectionModal/CollectionModal';
-
+export { default as UpdateCollectionModal } from './CollectionModal/UpdateCollectionModal';
+export { default as DeleteCollectionModal } from './CollectionModal/DeleteCollectionModal';

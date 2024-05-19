@@ -3,16 +3,15 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-const CollectionModal = ({ isOpen, onClose, onCollectionAdded }) => {
+const UpdateCollectionModal = ({ isOpen, onClose, collectionId }) => {
     const [collectionName, setCollectionName] = useState('');
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
         if (token) {
             try {
-                const response = await axios.post(
-                    'http://localhost:3000/collection',
+                const response = await axios.patch(
+                    `http://localhost:3000/collection/${collectionId}`,
                     { collection_name: collectionName },
                     {
                         headers: {
@@ -21,8 +20,7 @@ const CollectionModal = ({ isOpen, onClose, onCollectionAdded }) => {
                         },
                     }
                 );
-                onCollectionAdded(response.data);
-                toast.success("Adding your collection!");
+                toast.success("Updating your collection!");
                 onClose();
             } catch (error) {
                 toast.error(error.response?.data);
@@ -34,9 +32,9 @@ const CollectionModal = ({ isOpen, onClose, onCollectionAdded }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center">
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center text-black">
             <div className="bg-white p-6 rounded-lg w-1/3">
-                <h2 className="text-2xl font-bold mb-4">Add a Collection</h2>
+                <h2 className="text-2xl font-bold mb-4">Update Collection Name</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label htmlFor="collectionName" className="block text-gray-700 mb-2">Collection Name</label>
@@ -61,7 +59,7 @@ const CollectionModal = ({ isOpen, onClose, onCollectionAdded }) => {
                             type="submit"
                             className="px-4 py-2 bg-primary-600 text-white rounded-lg"
                         >
-                            Add Collection
+                            Update Collection
                         </button>
                     </div>
                 </form>
@@ -70,4 +68,4 @@ const CollectionModal = ({ isOpen, onClose, onCollectionAdded }) => {
     );
 };
 
-export default CollectionModal;
+export default UpdateCollectionModal;
