@@ -41,7 +41,7 @@ exports.getEntries = async (req, res) => {
 
         const entries = await entryService.getEntries(collection);
         if(entries.length === 0){
-            return res.status(201).json("No entries exists!");
+            return res.status(400).json("No entries exists!");
         }
         return res.status(200).json(entries);
     } catch (error) {

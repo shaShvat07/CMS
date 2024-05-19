@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Login, SignUp, Home, PageNotFound, Layout, FormPage } from './index.js';
+import { Login, SignUp, Home, PageNotFound, Layout, FormPage, Entry } from './index.js';
 import { Toaster } from 'react-hot-toast';
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
         <Routes >
           <Route path="/" element={<Layout />}>
             <Route path="/" index element={<Home />} />
-            <Route path="/:collectionId" index element={<FormPage />} />
+            <Route path="/:collectionId" index element={<Entry />} />
             <Route path="*" element={<PageNotFound />} />
           </Route>
           <Route path="login" element={<Login />} />

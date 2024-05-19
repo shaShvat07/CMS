@@ -45,7 +45,7 @@ const Sidebar = () => {
       <div className='w-full text-center mt-4'>
         Your Collections
       </div>
-      <ul className='p-4 overflow-y-scroll h-full'>
+      <ul className='p-4 overflow-y-auto h-full'>
         {collections.map((collection) => (
           <>
             <li
