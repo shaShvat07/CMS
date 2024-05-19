@@ -1,16 +1,52 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
-const DynamicForm = ({ fields }) => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+const DynamicForm = ({ fields, onClose }) => {
+    const { register, handleSubmit, getValues, formState: { errors } } = useForm();
+    const { collectionId } = useParams();
 
-    const onSubmit = data => {
-        console.log(data);
+    const onSubmit = async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const data = getValues();
+
+                // Convert fields to their respective types
+                fields.forEach(field => {
+                    if (field.type === 'Number') {
+                        data[field.name] = parseFloat(data[field.name]);
+                    } else if (field.type === 'Boolean') {
+                        data[field.name] = Boolean(data[field.name]);
+                    }
+                });
+
+                console.log(data);
+                console.log(collectionId);
+                const response = await axios.post(
+                    `http://localhost:3000/${collectionId}/entry`,
+                    data,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+                toast.success("Entry added successfully!");
+                onClose();
+            } catch (error) {
+                toast.error(error.response?.data || 'An error occurred');
+                console.error('Error adding entry:', error);
+            }
+        }
     };
 
     const renderField = (field) => {
-        const { name, type, unique } = field;
+        const { name, type } = field;
 
         switch (type) {
             case 'Text':
@@ -97,9 +133,16 @@ const DynamicForm = ({ fields }) => {
             <div className="flex items-center justify-between">
                 <button
                     type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
                 >
                     Submit
+                </button>
+                <button
+                    type="button"
+                    onClick={onClose}
+                    className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline mr-2"
+                >
+                    Cancel
                 </button>
             </div>
         </form>
@@ -114,7 +157,8 @@ DynamicForm.propTypes = {
             type: PropTypes.string.isRequired,
             unique: PropTypes.bool.isRequired
         })
-    ).isRequired
+    ).isRequired,
+    onClose: PropTypes.func.isRequired
 };
 
 export default DynamicForm;

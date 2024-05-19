@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { EntryList } from '..';
+import { EntryList, EntryModal } from '..';
 
 const Entry = () => {
     const [collection, setCollection] = useState([]);
     const [entries, setEntries] = useState([]);
-    // const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const { collectionId } = useParams();
     const token = localStorage.getItem('token');
     useEffect(() => {
@@ -56,8 +56,12 @@ const Entry = () => {
             <div className="mt-3 border"></div>
             <div className="mt-3 text-white text-2xl text-center">Your Entry list</div>
             <div>
-                <EntryList entries={entries} />
+                <EntryList entries={entries} collection={collection}/>
             </div>
+            <EntryModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </>
     );
 };

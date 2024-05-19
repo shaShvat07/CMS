@@ -3,7 +3,7 @@ import axios from 'axios';
 import { DynamicForm } from '..';
 import { useParams } from 'react-router-dom';
 
-const FormPage = () => {
+const FormPage = ({ onClose }) => {
     const [fields, setFields] = useState([]);
     const token = localStorage.getItem('token');
     const { collectionId } = useParams();
@@ -21,8 +21,7 @@ const FormPage = () => {
 
 return (
     <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Dynamic Form</h1>
-        <DynamicForm fields={fields} />
+        <DynamicForm fields={fields} onClose={onClose}/>
     </div>
 );
 };
