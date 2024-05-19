@@ -4,7 +4,7 @@ import { convertToIST } from '../utils';
 
 const Collection = ({ collection, index }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-
+  
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
@@ -36,7 +36,7 @@ const Collection = ({ collection, index }) => {
             </tr>
           </thead>
           <tbody>
-            {collection.properties.map((prop, propIndex) => (
+            {collection && collection.properties && collection.properties.map((prop, propIndex) => (
               <tr key={propIndex} className="border-b">
                 <td className="px-4 py-2 text-center">{prop.name}</td>
                 <td className="px-4 py-2 text-center">{prop.type}</td>

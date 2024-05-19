@@ -9,3 +9,5 @@ export { default as Navbar } from './Navbar/Navbar';
 export { default as Sidebar } from './Sidebar/Sidebar';
 export { default as Collection } from './Collection/Collection';
 export { default as CollectionsList } from './Collection/CollectionsList';
+export { default as CollectionModal } from './CollectionModal/CollectionModal';
+
