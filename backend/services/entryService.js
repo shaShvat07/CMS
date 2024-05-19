@@ -144,9 +144,33 @@ exports.updateEntry = async (collection, entry_id, entryData) => {
         for (const prop of collection.properties) {
             if (entryData[prop.name] !== undefined) {
                 const value = entryData[prop.name];
-                const expectedType = prop.type.toLowerCase();
-                const actualType = typeof value;
-                if (actualType !== expectedType) {
+                let expectedType = '';
+                let isValid = true;
+
+                switch (prop.type) {
+                    case 'Text':
+                    case 'Email':
+                    case 'Password':
+                        expectedType = 'string';
+                        isValid = typeof value === expectedType;
+                        break;
+                    case 'Number':
+                        expectedType = 'number';
+                        isValid = typeof value === expectedType;
+                        break;
+                    case 'Boolean':
+                        expectedType = 'boolean';
+                        isValid = typeof value === expectedType;
+                        break;
+                    case 'Date':
+                        expectedType = 'string';
+                        isValid = typeof value === expectedType && isISO8601(value);
+                        break;
+                    default:
+                        isValid = false;
+                }
+
+                if (!isValid) {
                     return {
                         status: 400,
                         message: `${prop.name} must be of type ${prop.type}.`,

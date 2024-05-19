@@ -17,7 +17,10 @@ export { default as DeletePropModal } from './PropModal/DeletePropModal';
 export { default as Entry } from './Entry/Entry';
 export { default as EntryList } from './Entry/EntryList';
 export { default as EntryModal } from './EntryModal/EntryModal';
+export { default as UpdateEntryModal } from './EntryModal/UpdateEntryModal';
+export { default as UpdateEntryForm } from './UpdateEntryForm/UpdateEntryForm';
 export { default as DeleteEntryModal } from './EntryModal/DeleteEntryModal';
+
 
 
 

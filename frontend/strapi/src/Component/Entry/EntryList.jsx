@@ -1,17 +1,33 @@
 import React, { useState } from 'react';
-import { DeleteEntryModal } from '..';
+import { DeleteEntryModal, UpdateEntryModal } from '..';
 
 const EntryList = ({ entries, collection }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [EntryId, setEntryId] = useState('');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState(null);
+
+  const handleUpdateClick = (entry) => {
+    setSelectedEntry(entry);
+    setIsUpdateModalOpen(true);
+  };
+
   return (
     <div className="container mx-auto p-4 overflow-x-auto text-white mr-48">
       <DeleteEntryModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
         collectionId={collection.collection_id}
-        entryId={EntryId}
+        entryId={selectedEntry?.id}
       />
+      {selectedEntry && (
+        <UpdateEntryModal
+          isOpen={isUpdateModalOpen}
+          onClose={() => setIsUpdateModalOpen(false)}
+          fields={collection.properties}
+          initialValues={selectedEntry}
+          entryId={selectedEntry.id}
+        />
+      )}
       <table className="min-w-full bg-gray-800 overflow-hidden">
         <thead>
           <tr>
@@ -34,21 +50,27 @@ const EntryList = ({ entries, collection }) => {
                 </td>
               ))}
               <td className="border px-4 py-2 flex justify-around">
-                <img src="/edit.svg"></img>
+                <img
+                  src="/edit.svg"
+                  className="hover:cursor-pointer"
+                  onClick={() => handleUpdateClick(entry)}
+                  alt="Edit"
+                />
                 <img
                   src="/delete.svg"
-                  className='hover:cursor-pointer'
+                  className="hover:cursor-pointer"
                   onClick={() => {
-                    setIsModalOpen(true);
-                    setEntryId(entry.id);
-                  }}>
-                </img>
+                    setIsDeleteModalOpen(true);
+                    setSelectedEntry(entry);
+                  }}
+                  alt="Delete"
+                />
               </td>
             </tr>
           ))}
           {!entries.length && (
             <tr>
-              <td colSpan={collection?.properties?.length + 1} className="border px-4 py-2 text-center">
+              <td colSpan={collection?.properties?.length + 2} className="border px-4 py-2 text-center">
                 No entries found.
               </td>
             </tr>
