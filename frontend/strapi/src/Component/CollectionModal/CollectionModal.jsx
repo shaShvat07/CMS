@@ -1,6 +1,7 @@
 // CollectionModal.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const CollectionModal = ({ isOpen, onClose, onCollectionAdded }) => {
     const [collectionName, setCollectionName] = useState('');
@@ -21,9 +22,11 @@ const CollectionModal = ({ isOpen, onClose, onCollectionAdded }) => {
                     }
                 );
                 onCollectionAdded(response.data);
+                toast.success("Adding your collection!");
                 onClose();
             } catch (error) {
-                console.error('Error adding collection:', error);
+                toast.error(error.response?.data);
+                console.log(error.response?.data); 
             }
         }
     };
