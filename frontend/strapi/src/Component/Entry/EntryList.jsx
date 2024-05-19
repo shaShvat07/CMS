@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DeleteEntryModal, UpdateEntryModal } from '..';
+import { convertToIST } from '../utils';
 
 const EntryList = ({ entries, collection }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -46,7 +47,8 @@ const EntryList = ({ entries, collection }) => {
               <td className="border px-4 py-2">{entry.id}</td>
               {collection?.properties?.map((prop) => (
                 <td key={prop.id} className="border px-4 py-2">
-                  {entry[prop.name]}
+                  {prop.type == 'Boolean' ? entry[prop.name] ? 'true' : 'false' : ''}
+                  {prop.type == 'Date' ? convertToIST(entry[prop.name]).split(",")[0].trim() : entry[prop.name]}
                 </td>
               ))}
               <td className="border px-4 py-2 flex justify-around">

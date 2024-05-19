@@ -34,6 +34,7 @@ const Entry = () => {
             })
                 .then(response => {
                     setEntries(response.data);
+                    console.log(entries);
                 })
                 .catch(error => {
                     setEntries([]);

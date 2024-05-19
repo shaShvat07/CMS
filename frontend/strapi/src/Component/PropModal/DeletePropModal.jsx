@@ -3,14 +3,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-const DeletePropModal = ({ isOpen, onClose, collectionId, entryId }) => {
+const DeletePropModal = ({ isOpen, onClose, collectionId, propId }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
         if (token) {
             try {
                 const response = await axios.delete(
-                    `http://localhost:3000/collection/${collectionId}/prop/${entryId}`,
+                    `http://localhost:3000/collection/${collectionId}/prop/${propId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
