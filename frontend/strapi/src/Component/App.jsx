@@ -16,7 +16,7 @@ function App() {
         <Routes >
           <Route path="/" element={<Layout />}>
             <Route path="/" index element={<Home />} />
-            <Route path="/abc" index element={<FormPage />} />
+            <Route path="/:collectionId" index element={<FormPage />} />
             <Route path="*" element={<PageNotFound />} />
           </Route>
           <Route path="login" element={<Login />} />
