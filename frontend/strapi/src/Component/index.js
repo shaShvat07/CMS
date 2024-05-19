@@ -7,8 +7,5 @@ export { default as PageNotFound } from './PageNotFound/PageNotFound';
 export { default as Layout } from './Layout/Layout';
 export { default as Navbar } from './Navbar/Navbar';
 export { default as Sidebar } from './Sidebar/Sidebar';
-
-
-
-
-
+export { default as Collection } from './Collection/Collection';
+export { default as CollectionsList } from './Collection/CollectionsList';
