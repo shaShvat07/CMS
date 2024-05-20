@@ -1,8 +1,57 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# CMS - FRONTEND
 
-Currently, two official plugins are available:
+## Project Structure
+The project is structured as follows, ensuring modular and organized management of various functionalities.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+src
+    ├───Components
+    │   ├───Collection
+    │   ├───CollectionModal
+    │   ├───DynamicForm
+    │   ├───Entry
+    │   ├───EntryModal
+    │   ├───FormPage
+    │   ├───Home
+    │   ├───Layout
+    │   ├───Login
+    │   ├───SignUp
+    │   ├───Navbar
+    │   ├───PageNotFound
+    |   ├───PropModal
+    |   ├───Sidebar
+    |   ├───UpdateEntryForm
+    │   ├───App.jsx
+    │   ├───index.js
+    │   ├───utils.js
+    │   
+    ├───index.css
+    └───main.jsx
+```
+## Setup and Installation
+
+Setup
+```bash
+Clone the Repository by running this command 
+git clone https://github.com/shaShvat07/CMS.git
+cd frontend 
+cd strapi
+```
+
+Installating Dependencies
+```bash
+npm i
+```
+
+Run the Application
+```bash
+npm run dev
+```
+
+## Routes
+
+* ```/ ``` - Home Page
+* ```/login ``` - Login Page
+* ```/register ``` - Signup Page
+* ```/:collectionId ``` - Collection Entry Page
